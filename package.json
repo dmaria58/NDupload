@@ -1,0 +1,17 @@
+{
+  "name": "NDupload",
+  "version": "0.0.1",
+  "description": "Node_JS_IMAGE_Upload",
+  "main": "app.js",
+  "dependencies": {
+    "koa": "^2.3.0",
+    "koa-body": "^2.3.0",
+    "koa-router": "^7.2.1",
+    "koa-static": "^4.0.1",
+    "memory-cache": "^0.2.0",
+    "uuid": "^3.1.0"
+  },
+  "author": {
+    "name": "maria"
+  }
+}

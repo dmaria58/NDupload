@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/plain; Charset=gb2312">
+    <title>文件分包上传</title>
+<script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+<body>
+    <!--<form id="testform" name="testform" action="/upload" enctype="multipart/form-data"  method="POST">-->
+    <form id="testform" name="testform" action="/upload"  method="POST">
+      <input type="text" id="title" name="title"><br>
+      <input onchange="handleFiles(this.files)" id="upload" type="file" name="upload" multiple="multiple"><br>
+      <input type="button" value="Upload" onclick="myUpload()">
+    </form>
+    <div id="div1"></div>
+    <div id="result"></div>
+</body>
+  <script> 
+  var myresult=[];
+  var filetype; 
+  function myUpload(){
+    var ajaxlength=myresult.length;
+    var ajaxkey="";
+    for(var i=0;i<ajaxlength;i++){
+      var formData = new FormData();  
+      formData.append("filetype",filetype);
+      formData.append("mylist", myresult[i]);
+      formData.append("length", ajaxlength);
+      formData.append("ajaxkey", ajaxkey);  
+      formData.append("ajaxi", i);
+      $.ajax({
+        type: "POST",
+        url:"/upload",
+        processData: false,
+        contentType: false,
+        async: false,
+        data:formData,
+        beforeSend: function () {
+           $("#result").html("开始上传");
+        },
+        success:function(result){
+          if(result.end=="success"||result.end=="fail"){
+            $("#result").html(result.end);
+          }
+          else if(result.ing=="success"&&result.ajaxkey&&result.ajaxkey!=""){
+            ajaxkey=result.ajaxkey;
+          }
+          else{
+            $("#result").html("上传失败");
+          }
+        }
+      });
+    }
+  }
+  function handleFiles(files) {
+    if (files.length) {
+        var file = files[0];   //多张图片可分多次上传，本例只传第一张
+        filetype=files[0].name.split(".")[files[0].name.split(".").length-1]  
+        var reader = new FileReader();
+        var result=document.getElementById("result");
+        reader.readAsDataURL(file);  
+        reader.onloadstart=function(f){
+          result.innerHTML="读取文件中。。。。"; 
+        }
+        reader.onloadend=function(f){  
+            //显示文件  
+            myresult=subResult(this.result,200000);
+            //result.innerHTML='<img src="'+this.result+'" alt=""/>';  
+            result.innerHTML='读取成功。。。';  
+        } 
+    }
+  }
+  function subResult(result,num){   //分割文件流num可自定义（按照num的长度去分割）
+    var bresult=result,b=result.length,a=b/num,arr=[];
+    for(var i=0;i<a;i++){
+      arr.push(bresult.slice(0,num));
+      bresult=bresult.substr(num);
+    }
+    return arr;
+  }
+  </script>
+</html>
