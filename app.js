@@ -1,7 +1,6 @@
 const router = require('koa-router')();
 const Koa = require('koa');
 const cache = require('memory-cache');
-const NodeCache = require('node-cache');
 const serve = require('koa-static');
 const koaBody = require('koa-body');
 const URL = require('url');
